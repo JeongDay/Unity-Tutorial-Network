@@ -1,16 +1,34 @@
 using System.Collections;
 using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Find_PlayerController : MonoBehaviourPun
 {
     private Animator anim;
+
+    [SerializeField] private Transform playerRoot;
+    
     [SerializeField] private GameObject punchBox;
     [SerializeField] private GameObject kickBox;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
+    }
+
+    void Start()
+    {
+        if (photonView.IsMine)
+        {
+            var followCamera = FindFirstObjectByType<CinemachineCamera>();
+            followCamera.Target.TrackingTarget = playerRoot;
+        }
+        else
+        {
+            GetComponent<PlayerInput>().enabled = false;
+        }
     }
 
     void OnPunch()
