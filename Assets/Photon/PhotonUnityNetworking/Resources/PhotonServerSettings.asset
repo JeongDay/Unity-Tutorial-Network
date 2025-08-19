@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PhotonServerSettings
   m_EditorClassIdentifier: 
   AppSettings:
-    AppIdRealtime: 6c4dfe47-4ef4-4af3-bc9e-db6cbf180505
+    AppIdRealtime: f897f2d9-9113-47a6-97e1-863ad68159dc
     AppIdFusion: 
     AppIdChat: 
     AppIdVoice: 
@@ -41,6 +41,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - Hat
   - Attack
+  - TriggerEvent
+  - RPC_Kick
+  - RPC_Punch
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

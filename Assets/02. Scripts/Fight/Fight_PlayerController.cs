@@ -1,5 +1,6 @@
 using System.Collections;
 using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -22,19 +23,19 @@ public class Fight_PlayerController : MonoBehaviourPun
 
     private bool isAttack = false;
     public bool isDead = false;
-    
+
     void Start()
     {
         anim = GetComponent<Animator>();
         playerInput = GetComponent<PlayerInput>();
-        
+
         currentHp = maxHp;
 
         if (photonView.IsMine)
         {
             var followCamera = FindFirstObjectByType<CinemachineCamera>();
             followCamera.Target.TrackingTarget = playerRoot;
-            
+
             nickName.text = PhotonNetwork.NickName;
             nickName.color = Color.green;
         }
@@ -42,6 +43,7 @@ public class Fight_PlayerController : MonoBehaviourPun
         {
             nickName.text = photonView.Owner.NickName;
             nickName.color = Color.red;
+            playerInput.enabled = false;
         }
     }
 
@@ -78,17 +80,30 @@ public class Fight_PlayerController : MonoBehaviourPun
         isAttack = false;
     }
 
+    [PunRPC]
+    private void TriggerEvent(int viewID, float damage)
+    {
+        PhotonView targetPv = PhotonView.Find(viewID);
+
+        if (targetPv != null)
+            targetPv.GetComponent<Fight_PlayerController>().GetDamage(damage);
+    }
+
     public void GetDamage(float damage)
     {
         currentHp -= damage;
-        
+
         hpBar.fillAmount = currentHp / maxHp;
 
-        if (currentHp <= 0)
+        if (currentHp <= 0f)
         {
-            isDead = true;
-            anim.SetTrigger("Death");
-            GetComponent<CharacterController>().enabled = false;
+            if (photonView.IsMine)
+            {
+                isDead = true;
+                anim.SetTrigger("Death");
+                GetComponent<CharacterController>().enabled = false;
+                Fight_GameManager.Instance.EndGame();
+            }
         }
     }
 }
