@@ -1545,7 +1545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 2
-  SprintSpeed: 5.335
+  SprintSpeed: 4
   RotationSmoothTime: 0.12
   SpeedChangeRate: 10
   LandingAudioClip: {fileID: 8300000, guid: ff697d3070687ce4583faa0561a145a2, type: 3}
@@ -1830,7 +1830,6 @@ MonoBehaviour:
   playerRoot: {fileID: 1157939746914439779}
   punchBox: {fileID: 7519870341365559406}
   kickBox: {fileID: 4066866538706980047}
-  characters: []
 --- !u!1 &1635657888794505720
 GameObject:
   m_ObjectHideFlags: 0
