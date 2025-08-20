@@ -109,6 +109,15 @@ public class Find_PlayerController : MonoBehaviourPun
         GetComponent<ThirdPersonController>().enabled = false;
 
         if (photonView.IsMine)
+        {
             mainCamera.cullingMask |= (1 << 9);
+            Find_GameManager.Instance.SetObserver();
+        }
+    }
+
+    [PunRPC]
+    public void Winner(string nickName)
+    {
+        Find_GameManager.Instance.EndGame(nickName);
     }
 }

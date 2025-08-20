@@ -1744,6 +1744,7 @@ GameObject:
   - component: {fileID: 7486367827068032385}
   - component: {fileID: 6903270522166577729}
   - component: {fileID: 4526324643410466702}
+  - component: {fileID: 5101038847859558582}
   m_Layer: 9
   m_Name: '[Text] Nickname'
   m_TagString: Untagged
@@ -1909,6 +1910,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 6903270522166577729}
   m_maskType: 0
+--- !u!114 &5101038847859558582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2794178953164681422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3795696b7ffb4a846bfbdff21a4d1763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
 --- !u!1 &2808671374489944669
 GameObject:
   m_ObjectHideFlags: 0
