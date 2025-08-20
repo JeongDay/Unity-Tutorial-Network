@@ -43,7 +43,6 @@ public class AgentController : MonoBehaviourPun
             float moveType = Random.Range(0, 2) == 0 ? 0.5f : 1f;
             anim.SetFloat("Speed", moveType); // 이동 애니메이션
             agent.speed = moveType * 4f; // 2 or 4
-
             
             yield return new WaitUntil(() => !isDead && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance);
             
@@ -56,6 +55,9 @@ public class AgentController : MonoBehaviourPun
 
     void Update()
     {
+        if (isDead)
+            return;
+        
         Vector3 dir = agent.desiredVelocity;
         if (dir != Vector3.zero)
         {
@@ -88,5 +90,6 @@ public class AgentController : MonoBehaviourPun
         anim.SetTrigger("Death");
         agent.updatePosition = false;
         agent.isStopped = true;
+        StopAllCoroutines();
     }
 }

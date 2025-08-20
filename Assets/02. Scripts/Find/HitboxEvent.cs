@@ -11,7 +11,7 @@ public class HitboxEvent : MonoBehaviour
         }
         else if (other.CompareTag("Player"))
         {
-            
+            other.GetComponent<Find_PlayerController>().GetHit();
         }
     }
 }
