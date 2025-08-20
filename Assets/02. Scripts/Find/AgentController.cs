@@ -1,8 +1,9 @@
 using System.Collections;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AgentController : MonoBehaviour
+public class AgentController : MonoBehaviourPun
 {
     private NavMeshAgent agent;
     private Animator anim;
@@ -14,6 +15,8 @@ public class AgentController : MonoBehaviour
 
     [SerializeField] private float turnSpeed = 10f;
 
+    private bool isDead = false;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -22,17 +25,27 @@ public class AgentController : MonoBehaviour
         agent.updateRotation = false;
     }
 
-    IEnumerator Start()
+    void Start()
     {
-        while (true)
+        if (PhotonNetwork.IsMasterClient)
+            StartCoroutine(WanderRoutine());
+    }
+
+    IEnumerator WanderRoutine()
+    {
+        while (!isDead)
         {
-            SetRandomDestination();
+            var randomDir = Random.insideUnitSphere * wanderRadius;
+            randomDir += transform.position;
+            
+            photonView.RPC(nameof(SetDestination), RpcTarget.AllBuffered, randomDir);
+            
             float moveType = Random.Range(0, 2) == 0 ? 0.5f : 1f;
             anim.SetFloat("Speed", moveType); // 이동 애니메이션
             agent.speed = moveType * 4f; // 2 or 4
 
             
-            yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance);
+            yield return new WaitUntil(() => !isDead && !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance);
             
             anim.SetFloat("Speed", 0f); // 정지 애니메이션
 
@@ -51,15 +64,29 @@ public class AgentController : MonoBehaviour
         }
     }
     
-    private void SetRandomDestination() // 랜덤 목적지 설정
+    [PunRPC]
+    private void SetDestination(Vector3 dir)
     {
-        var randomDir = Random.insideUnitSphere * wanderRadius;
-        randomDir += transform.position;
-
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDir, out hit, wanderRadius, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(dir, out hit, wanderRadius, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position);
+            if (!isDead)
+                agent.SetDestination(hit.position);
         }
+    }
+
+    public void GetHit()
+    {
+        photonView.RPC(nameof(Dead), RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    private void Dead()
+    {
+        isDead = true;
+        GetComponent<Collider>().enabled = false;
+        anim.SetTrigger("Death");
+        agent.updatePosition = false;
+        agent.isStopped = true;
     }
 }
